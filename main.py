@@ -5,7 +5,7 @@ from openai import OpenAI
 
 app = FastAPI(title="Local GEO & AI Search Optimizer", version="1.0")
 
-# Initialize OpenAI client (Render will pull OPENAI_API_KEY from environment variables)
+# Initialize OpenAI client safely
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 class AIAuditRequest(BaseModel):
@@ -26,10 +26,6 @@ def read_root():
 
 @app.post("/api/audit-ai-visibility")
 def audit_ai_visibility(data: AIAuditRequest):
-    """
-    Simulates an AI search engine query to check if a local business 
-    is recommended by an LLM, returning a visibility score and gap analysis.
-    """
     prompt = (
         f"Act as a local consumer search engine. A user asks: 'What are the top 3 best {data.industry} "
         f"businesses in {data.city}? Give me specific names.'\n\n"
@@ -54,10 +50,6 @@ def audit_ai_visibility(data: AIAuditRequest):
 
 @app.post("/api/generate-ai-schema")
 def generate_ai_schema(data: SchemaRequest):
-    """
-    Generates advanced machine-readable JSON-LD Schema markup optimized 
-    for AI crawlers and LLM retrieval systems to index local entities.
-    """
     schema_markup = {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
@@ -74,6 +66,6 @@ def generate_ai_schema(data: SchemaRequest):
         "priceRange": "$$"
     }
     return {
-        "instructions": "Paste this JSON-LD script inside the <head> tag of the business website so AI search browsers parse entity data seamlessly.",
+        "instructions": "Paste this JSON-LD script inside the <head> tag of the business website.",
         "json_ld": schema_markup
     }
