@@ -185,7 +185,7 @@ def audit_ai_visibility(data: AIAuditRequest):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile", # Ultra-fast, completely free tier model on Groq
+            model="llama-3.1-8b-instant",  # Updated to active Groq free model
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
