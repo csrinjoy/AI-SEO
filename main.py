@@ -42,7 +42,7 @@ def read_root():
         <div class="max-w-4xl mx-auto px-4 py-12">
             <!-- Header -->
             <div class="text-center mb-10">
-                <span class="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Powered by Free Groq AI</span>
+                <span class="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Developed by Srinjoy Chatterjee</span>
                 <h1 class="text-4xl font-extrabold tracking-tight mt-3 text-white">Local GEO & AI Search Optimizer</h1>
                 <p class="text-slate-400 mt-2">Audit your business visibility in AI search engines and generate optimized local Schema markup.</p>
             </div>
