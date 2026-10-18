@@ -42,7 +42,7 @@ def read_root():
         <div class="max-w-4xl mx-auto px-4 py-12">
             <!-- Header -->
             <div class="text-center mb-10">
-                <span class="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Powered by Free Google Gemini API</span>
+                <span class="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Developed by Gemini</span>
                 <h1 class="text-4xl font-extrabold tracking-tight mt-3 text-white">Local GEO & AI Search Optimizer</h1>
                 <p class="text-slate-400 mt-2">Audit your local business visibility using Gemini and generate optimized JSON-LD Schema markup.</p>
             </div>
@@ -185,7 +185,8 @@ def audit_ai_visibility(data: AIAuditRequest):
     
     try:
         response = client.chat.completions.create(
-            model="gemini-2.5-flash",
+            
+            model="gemini-3.8-flash",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
