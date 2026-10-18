@@ -7,11 +7,11 @@ from openai import OpenAI
 
 app = FastAPI(title="Local GEO & AI Search Optimizer", version="1.0")
 
-# Initialize Groq client (100% compatible with OpenAI SDK & has a generous free tier)
-# Get your free key at: https://console.groq.com
+# Initialize OpenAI client pointing to Google's Gemini OpenAI-compatible endpoint
+# using your GEMINI_API_KEY environment variable.
 client = OpenAI(
-    api_key=os.environ.get("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
+    api_key=os.environ.get("GEMINI_API_KEY"),
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
 class AIAuditRequest(BaseModel):
@@ -42,9 +42,9 @@ def read_root():
         <div class="max-w-4xl mx-auto px-4 py-12">
             <!-- Header -->
             <div class="text-center mb-10">
-                <span class="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Developed by Srinjoy Chatterjee</span>
+                <span class="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Powered by Free Google Gemini API</span>
                 <h1 class="text-4xl font-extrabold tracking-tight mt-3 text-white">Local GEO & AI Search Optimizer</h1>
-                <p class="text-slate-400 mt-2">Audit your business visibility in AI search engines and generate optimized local Schema markup.</p>
+                <p class="text-slate-400 mt-2">Audit your local business visibility using Gemini and generate optimized JSON-LD Schema markup.</p>
             </div>
 
             <!-- Tabs / Cards Grid -->
@@ -57,15 +57,15 @@ def read_root():
                     <form id="auditForm" class="space-y-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Business Name</label>
-                            <input type="text" id="audit_business" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-white" placeholder="e.g. Apex Plumbing">
+                            <input type="text" id="audit_business" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-white" placeholder="e.g. J & J Auto Repair">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Industry</label>
-                            <input type="text" id="audit_industry" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-white" placeholder="e.g. Plumber">
+                            <input type="text" id="audit_industry" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-white" placeholder="e.g. Auto Repair">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">City</label>
-                            <input type="text" id="audit_city" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-white" placeholder="e.g. Austin, TX">
+                            <input type="text" id="audit_city" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-white" placeholder="e.g. Santa Ana, CA">
                         </div>
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg transition text-sm">Run AI Audit</button>
                     </form>
@@ -185,15 +185,17 @@ def audit_ai_visibility(data: AIAuditRequest):
     
     try:
         response = client.chat.completions.create(
-            model="openai/gpt-oss-120b",  # Active Groq model endpoint
+            model="gemini-2.5-flash",
             messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
-            temperature=0.0
+            response_format={"type": "json_object"}
         )
+        
+        result = json.loads(response.choices[0].message.content)
+
         return {
             "target_business": data.business_name,
             "location": f"{data.city}",
-            "audit_result": json.loads(response.choices[0].message.content)
+            "audit_result": result
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
